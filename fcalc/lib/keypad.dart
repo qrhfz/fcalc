@@ -100,9 +100,17 @@ class _KeypadState extends ConsumerState<Keypad> {
 
   void enter() {
     final text = inputCtl.text;
-    final result = ref.read(envProv).run(text);
+    final result = ref.read(interpreterProv).run(text);
+    final historyNotifier = ref.read(historyProv.notifier);
+    result.when(
+      ok: (value) {
+        historyNotifier.add(input: text, result: value);
+      },
+      error: (e) {
+        historyNotifier.add(input: text, error: e);
+      },
+    );
 
-    ref.read(historyProv.notifier).add(input: text, result: result);
     inputCtl.clear();
   }
 }
