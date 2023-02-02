@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:built_collection/built_collection.dart';
+import 'package:fcalc_interpreter/src/builtin_functions.dart';
 import 'package:fcalc_interpreter/src/constants.dart';
 import 'package:fcalc_interpreter/src/expr.dart';
 import 'package:fcalc_interpreter/src/factorial.dart';
@@ -8,31 +9,28 @@ import 'package:fcalc_interpreter/src/parser.dart';
 import 'package:fcalc_interpreter/src/token.dart';
 import 'package:fcalc_interpreter/src/tokenizer.dart';
 
-import 'package:dart_numerics/dart_numerics.dart' as dn;
-
 typedef BuiltinFunction = num Function(List<num> args);
 
 class Env {
-  final Map<String, num> _vars = {
-    'π': math.pi,
-    'e': math.e,
-  };
+  final Map<String, num> _vars;
   final Map<String, FuncDefExpr> _funcs = {};
   static final Map<String, BuiltinFunction> _builtinFuncs = {
-    'sin': (args) => math.sin(args[0]),
-    'cos': (args) => math.cos(args[0]),
-    'tan': (args) => math.tan(args[0]),
-    'ln': (args) => math.log(args[0]),
-    'log': (args) => dn.log10(args[0]),
-    '√': (args) => math.sqrt(args[0]),
-    'mod': (args) => args[0] % args[1],
+    'sin': BuiltinFunctions.sin,
+    'cos': BuiltinFunctions.cos,
+    'tan': BuiltinFunctions.tan,
+    'ln': BuiltinFunctions.ln,
+    'log': BuiltinFunctions.log,
+    '√': BuiltinFunctions.sqrt,
+    'mod': BuiltinFunctions.mod,
   };
 
   final Env? parent;
 
-  Env(this.parent);
+  Env(this.parent) : _vars = {};
 
-  Env.global() : parent = null;
+  Env.global()
+      : parent = null,
+        _vars = {'π': math.pi, 'e': math.e};
 
   num? run(String input) {
     final tokens = tokenize(input).toBuiltList();
