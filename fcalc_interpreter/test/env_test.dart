@@ -18,6 +18,24 @@ void main() {
     expect(() => env.run("x"), throwsException);
   });
 
+  test('func call', () {
+    env.run("x()=1");
+    expect(env.run("x()"), 1);
+  });
+
+  test('func call w/ args', () {
+    env.run("x(x,y)=x^y");
+    expect(env.run("x(2,3)"), 8);
+  });
+
+  test('builtin func: sin', () {
+    expect(env.run("sin(90°)"), 1.0);
+  });
+
+  test('call undefined func', () {
+    expect(() => env.run("x()"), throwsException);
+  });
+
   test('degree', () {
     expect(env.run("90°"), 1.5707963267948966);
   });
@@ -54,7 +72,11 @@ void main() {
     expect(env.run("6 / 2"), 3);
   });
 
-  test('divide', () {
+  test('power', () {
     expect(env.run("2 ^ 3"), 8);
+  });
+
+  test('grouping', () {
+    expect(env.run("(2+3)*3"), 15);
   });
 }

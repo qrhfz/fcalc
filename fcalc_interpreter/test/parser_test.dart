@@ -163,4 +163,49 @@ void main() {
 
     expect(actual, expected);
   });
+
+  test('func call no argument', () {
+    final tokens = [
+      Token(type: TokenType.identifier, text: "x"),
+      Token.lparen,
+      Token.rparen,
+    ].toBuiltList();
+    final parser = Parser(tokens);
+    final actual = parser.parse();
+
+    expect(
+      actual,
+      Expr.funcCall(
+        Token(type: TokenType.identifier, text: "x"),
+        [],
+      ),
+    );
+  });
+
+  test('operation inside grouping', () {
+    final tokens = [
+      Token.lparen,
+      Token(type: TokenType.number, text: "2"),
+      Token.plus,
+      Token(type: TokenType.number, text: "3"),
+      Token.rparen,
+      Token.times,
+      Token(type: TokenType.number, text: "3"),
+    ].toBuiltList();
+    final parser = Parser(tokens);
+    final actual = parser.parse();
+    final expected = Expr.binary(
+      Expr.group(
+        Expr.binary(
+          Expr.number(2),
+          Token.plus,
+          Expr.number(3),
+        ),
+      ),
+      Token.times,
+      Expr.number(3),
+    );
+
+    expect(actual, expected);
+  });
 }

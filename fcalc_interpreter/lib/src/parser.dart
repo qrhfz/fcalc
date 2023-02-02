@@ -62,6 +62,11 @@ class Parser {
     if (_peek(i)?.type != TokenType.rparen) {
       return null;
     }
+    i++;
+
+    if (_peek(i)?.type != TokenType.equal) {
+      return null;
+    }
 
     final name = _consume();
     if (name == null) {
@@ -272,6 +277,8 @@ class Parser {
       if (expr == null) {
         return null;
       }
+      _consumeAny([TokenType.rparen]);
+
       return Expr.group(expr);
     }
     final number = _consumeAny([TokenType.number]);
