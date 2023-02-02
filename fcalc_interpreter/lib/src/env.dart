@@ -38,7 +38,7 @@ class Env {
 
     return expr?.maybeMap(
       varDef: (variable) {
-        _vars[variable.name.text] = _eval(expr);
+        _vars[variable.name.text] = _eval(variable.expr);
         return null;
       },
       funcDef: (func) {

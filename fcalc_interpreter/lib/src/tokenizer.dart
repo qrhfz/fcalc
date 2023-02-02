@@ -91,6 +91,10 @@ Token _identifier(String src, Ref<int> cur) {
     if (keychars.contains(ch)) {
       break;
     }
+
+    if (ch == " ") {
+      break;
+    }
     i++;
   }
   cur.value = i;
