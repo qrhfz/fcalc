@@ -209,7 +209,8 @@ class Parser {
       return null;
     }
 
-    final op = _consumeAny([TokenType.degree, TokenType.factorial]);
+    final op =
+        _consumeAny([TokenType.degree, TokenType.factorial, TokenType.percent]);
     if (op == null) {
       return expr;
     }
