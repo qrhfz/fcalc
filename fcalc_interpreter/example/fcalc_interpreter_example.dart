@@ -1,4 +1,3 @@
-import 'package:fcalc_interpreter/fcalc_interpreter.dart';
 import 'package:fcalc_interpreter/src/env.dart';
 import 'dart:io';
 
