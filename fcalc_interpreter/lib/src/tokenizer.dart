@@ -26,6 +26,7 @@ List<Token> tokenize(String src) {
         tokens.add(Token.minus);
         cur.value++;
         continue;
+      case '*':
       case "×":
         tokens.add(Token.times);
         cur.value++;
@@ -79,7 +80,7 @@ bool _isWhitespace(String ch) {
 }
 
 /// identifier cant contain these characters
-const keychars = '+-×/%^!()°=,';
+const keychars = '+-×*/%^!()°=,';
 
 /// doesnot start with number and doesn't inlcude operator character.
 Token _identifier(String src, Ref<int> cur) {

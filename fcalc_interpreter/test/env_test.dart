@@ -42,6 +42,10 @@ void main() {
     expect(env.run("2 × 3"), 6);
   });
 
+  test('times with asterisk', () {
+    expect(env.run("2 * 3"), 6);
+  });
+
   test('divide', () {
     expect(env.run("6 / 2"), 3);
   });
