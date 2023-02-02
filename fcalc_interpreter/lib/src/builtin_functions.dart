@@ -39,21 +39,21 @@ class BuiltinFunctions {
 
   static num log(List<num> args) {
     if (args.isEmpty) {
-      throw ParameterError("ln", 1, args.length);
+      throw ParameterError("log", 1, args.length);
     }
     return dn.log10(args[0]);
   }
 
   static num sqrt(List<num> args) {
     if (args.isEmpty) {
-      throw ParameterError("ln", 1, args.length);
+      throw ParameterError("√", 1, args.length);
     }
     return math.sqrt(args[0]);
   }
 
   static num mod(List<num> args) {
     if (args.length < 2) {
-      throw ParameterError("ln", 2, args.length);
+      throw ParameterError("mod", 2, args.length);
     }
     return args[0] % args[1];
   }
