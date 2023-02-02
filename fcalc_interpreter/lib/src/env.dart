@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:built_collection/built_collection.dart';
 import 'package:fcalc_interpreter/src/builtin_functions.dart';
 import 'package:fcalc_interpreter/src/constants.dart';
+import 'package:fcalc_interpreter/src/errors.dart';
 import 'package:fcalc_interpreter/src/expr.dart';
 import 'package:fcalc_interpreter/src/factorial.dart';
 import 'package:fcalc_interpreter/src/parser.dart';
@@ -56,7 +57,7 @@ class Env {
       variable: (name) {
         final value = _findVar(name.text);
         if (value == null) {
-          throw "undefined variable ${name.text}";
+          throw VariableUnddefinedError(name.text);
         }
         return value;
       },
@@ -77,7 +78,7 @@ class Env {
           return builtinFn(pars);
         }
 
-        throw "undefined function ${name.text}";
+        throw FunctionUnddefinedError(name.text);
       },
       number: (value) => value,
       unary: (op, expr) {

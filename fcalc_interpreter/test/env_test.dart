@@ -14,6 +14,10 @@ void main() {
     expect(env.run("x"), 1);
   });
 
+  test('variable not found', () {
+    expect(() => env.run("x"), throwsException);
+  });
+
   test('degree', () {
     expect(env.run("90°"), 1.5707963267948966);
   });
@@ -48,5 +52,9 @@ void main() {
 
   test('divide', () {
     expect(env.run("6 / 2"), 3);
+  });
+
+  test('divide', () {
+    expect(env.run("2 ^ 3"), 8);
   });
 }
