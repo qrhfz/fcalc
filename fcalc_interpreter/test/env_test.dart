@@ -1,4 +1,4 @@
-import 'package:fcalc_interpreter/fcalc_interpreter.dart';
+import 'package:fcalc_interpreter/src/env.dart';
 import 'package:test/test.dart';
 
 void main() {

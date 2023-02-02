@@ -3,4 +3,4 @@
 /// More dartdocs go here.
 library fcalc_interpreter;
 
-export 'src/env.dart';
+export 'src/interpreter.dart';
