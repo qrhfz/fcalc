@@ -37,22 +37,14 @@ class Env {
     final tokens = tokenize(input).toBuiltList();
     final expr = Parser(tokens).parse();
 
-    return expr?.maybeMap(
-      varDef: (variable) {
-        _vars[variable.name.text] = _eval(variable.expr);
-        return null;
-      },
-      funcDef: (func) {
-        _funcs[func.name.text] = func;
-        return null;
-      },
-      orElse: () {
-        return _eval(expr);
-      },
-    );
+    if (expr == null) {
+      return null;
+    }
+
+    return _eval(expr);
   }
 
-  num _eval(Expr expr) {
+  num? _eval(Expr expr) {
     return expr.when(
       variable: (name) {
         final value = _findVar(name.text);
@@ -67,55 +59,82 @@ class Env {
         final builtinFn = _builtinFuncs[name.text];
         if (func != null) {
           for (final param in params.asMap().entries) {
-            funcEnv.setVar(func.args[param.key].text, _eval(param.value));
+            final paramValue = _eval(param.value);
+            if (paramValue == null) {
+              return null;
+            }
+            funcEnv.setVar(func.args[param.key].text, paramValue);
           }
 
           return funcEnv._eval(func.body);
         }
 
         if (builtinFn != null) {
-          final pars = params.map((e) => _eval(e)).toList();
-          return builtinFn(pars);
+          final paramValues = <num>[];
+          for (var param in params) {
+            final value = _eval(param);
+            if (value == null) {
+              return null;
+            }
+            paramValues.add(value);
+          }
+          return builtinFn(paramValues);
         }
 
         throw FunctionUnddefinedError(name.text);
       },
       number: (value) => value,
       unary: (op, expr) {
+        final value = _eval(expr);
+        if (value == null) {
+          return null;
+        }
         switch (op.type) {
           case TokenType.degree:
-            return _eval(expr) * radPerDeg;
+            return value * radPerDeg;
           case TokenType.factorial:
-            return factorial(_eval(expr));
+            return factorial(value);
           case TokenType.percent:
-            return _eval(expr) / 100;
+            return value / 100;
           case TokenType.minus:
-            return -(_eval(expr));
+            return -(value);
           default:
             throw "unexpected operator";
         }
       },
       binary: (left, op, right) {
+        final lvalue = _eval(left);
+        final rvalue = _eval(right);
+        if (rvalue == null || lvalue == null) {
+          return null;
+        }
+
         switch (op.type) {
           case TokenType.power:
-            return math.pow(_eval(left), _eval(right));
+            return math.pow(lvalue, rvalue);
           case TokenType.times:
-            return _eval(left) * _eval(right);
+            return lvalue * rvalue;
           case TokenType.divide:
-            return _eval(left) / _eval(right);
+            return lvalue / rvalue;
           case TokenType.plus:
-            return _eval(left) + _eval(right);
+            return lvalue + rvalue;
           case TokenType.minus:
-            return _eval(left) - _eval(right);
+            return lvalue - rvalue;
           default:
             throw "unexpected operator";
         }
       },
       funcDef: (name, args, body) {
-        throw "illegal function definition ${name.text}";
+        _funcs[name.text] = Expr.funcDef(name, args, body) as FuncDefExpr;
+        return null;
       },
       varDef: (Token name, Expr expr) {
-        throw "illegal variable definition ${name.text}";
+        final value = _eval(expr);
+        if (value == null) {
+          return null;
+        }
+        _vars[name.text] = value;
+        return null;
       },
       group: (Expr expr) {
         return _eval(expr);
