@@ -1,1 +1,4 @@
-const degPerRad = 57.2958;
+import 'dart:math';
+
+const degPerRad = 180 / pi;
+const radPerDeg = pi / 180;

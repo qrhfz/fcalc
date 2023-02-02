@@ -85,7 +85,7 @@ class Env {
       unary: (op, expr) {
         switch (op.type) {
           case TokenType.degree:
-            return _eval(expr) * degPerRad;
+            return _eval(expr) * radPerDeg;
           case TokenType.factorial:
             return factorial(_eval(expr));
           case TokenType.percent:
