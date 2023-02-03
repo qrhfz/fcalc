@@ -19,7 +19,7 @@ class _KeypadState extends ConsumerState<Keypad> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => inputCtl = ref.read(inputCtlProv));
+    Future.microtask(() => inputCtl = ref.watch(inputCtlProv));
   }
 
   @override
@@ -44,10 +44,13 @@ class _KeypadState extends ConsumerState<Keypad> {
         KeypadButton(text: "2", onPressed: two),
         KeypadButton(text: "3", onPressed: three),
         KeypadButton(text: "-", onPressed: minus),
+        KeypadButton(text: "^", onPressed: power),
         KeypadButton(text: "0", onPressed: zero),
+        KeypadButton(text: "!", onPressed: factorial),
+        KeypadButton(text: "+", onPressed: plus),
+        KeypadButton(text: "°", onPressed: degree),
         KeypadButton(text: ".", onPressed: dot),
         KeypadButton(text: "=", onPressed: equal),
-        KeypadButton(text: "+", onPressed: plus),
         KeypadButton(text: "↵", onPressed: enter),
       ],
     );
@@ -97,6 +100,12 @@ class _KeypadState extends ConsumerState<Keypad> {
   void equal() => inputCtl.text += '=';
 
   void plus() => inputCtl.text += '+';
+
+  void power() => inputCtl.text += '^';
+
+  void factorial() => inputCtl.text += '!';
+
+  void degree() => inputCtl.text += '°';
 
   void enter() {
     final text = inputCtl.text;
