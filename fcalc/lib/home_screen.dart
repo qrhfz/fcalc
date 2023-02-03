@@ -28,9 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               flex: 1,
               child: Column(
                 children: [
-                  Expanded(
-                    child: ResultView(),
-                  ),
+                  const Expanded(child: ResultView()),
                   TextField(
                     controller: inputCtl,
                     textAlign: TextAlign.end,
