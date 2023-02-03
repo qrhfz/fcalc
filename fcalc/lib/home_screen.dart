@@ -32,60 +32,71 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
     final history = ref.watch(historyProv);
 
-    return Scaffold(
-      body: Flex(
-        direction: Axis.vertical,
-        children: [
-          Flexible(
-            flex: 1,
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                    controller: scrollCtl,
-                    itemCount: history.length,
-                    itemBuilder: (ctx, i) {
-                      final entry = history[i];
-                      return AutoScrollTag(
-                        index: i,
-                        key: ValueKey(i),
-                        controller: scrollCtl,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                entry.input,
-                                style: const TextStyle(fontSize: 24),
-                              ),
-                              Text(
-                                entry.result?.toString() ?? "",
-                                style: const TextStyle(fontSize: 36),
-                              ),
-                            ],
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        body: Column(
+          children: [
+            Flexible(
+              flex: 1,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      controller: scrollCtl,
+                      itemCount: history.length,
+                      itemBuilder: (ctx, i) {
+                        final entry = history[i];
+                        return AutoScrollTag(
+                          index: i,
+                          key: ValueKey(i),
+                          controller: scrollCtl,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  entry.input,
+                                  style: const TextStyle(fontSize: 24),
+                                ),
+                                Text(
+                                  entry.result?.toString() ?? "",
+                                  style: const TextStyle(fontSize: 36),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 8);
-                    },
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(height: 8);
+                      },
+                    ),
                   ),
-                ),
-                TextField(
-                  controller: inputCtl,
-                  textAlign: TextAlign.end,
-                ),
-              ],
+                  TextField(
+                    controller: inputCtl,
+                    textAlign: TextAlign.end,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Flexible(
-            flex: 3,
-            child: Keypad(),
-          ),
-        ],
+            const TabBar(tabs: [
+              Tab(icon: Icon(Icons.calculate)),
+              Tab(icon: Icon(Icons.keyboard)),
+              Tab(icon: Icon(Icons.functions)),
+            ]),
+            const Flexible(
+              flex: 3,
+              child: TabBarView(children: [
+                Keypad(),
+                Text('a'),
+                Text('b'),
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }
