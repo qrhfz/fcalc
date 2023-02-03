@@ -1,3 +1,4 @@
+import 'package:fcalc/calculate.dart';
 import 'package:fcalc/history.dart';
 import 'package:fcalc/input_controller.dart';
 import 'package:fcalc/interpreter.dart';
@@ -128,16 +129,8 @@ class _KeypadState extends ConsumerState<Keypad> {
   void degree() => inputCtl.text += '°';
 
   void enter() {
-    final text = inputCtl.text;
-    final historyNotifier = ref.read(historyProv.notifier);
-
-    try {
-      final result = ref.read(interpreterProv).run(text);
-      historyNotifier.add(input: text, result: result);
-    } catch (e) {
-      historyNotifier.add(input: text, error: e.toString());
-    }
-
+    final src = inputCtl.text;
+    ref.read(calculateProv)(src);
     inputCtl.clear();
   }
 }

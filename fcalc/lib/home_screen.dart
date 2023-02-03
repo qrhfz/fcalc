@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
+import 'calculate.dart';
+
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -38,6 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final inputCtl = ref.watch(inputCtlProv);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Flexible(
@@ -49,6 +52,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   focusNode: focus,
                   controller: inputCtl,
                   textAlign: TextAlign.end,
+                  style: const TextStyle(fontSize: 24),
+                  onSubmitted: (_) {
+                    final src = inputCtl.text;
+                    ref.read(calculateProv)(src);
+                    inputCtl.clear();
+                  },
+                  onEditingComplete: () {
+                    focus.requestFocus();
+                  },
                 ),
               ],
             ),
