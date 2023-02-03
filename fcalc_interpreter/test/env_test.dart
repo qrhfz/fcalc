@@ -79,4 +79,13 @@ void main() {
   test('grouping', () {
     expect(env.run("(2+3)*3"), 15);
   });
+
+  test('invalid binary operation', () {
+    expect(() => env.run("2*"), throwsException);
+  });
+
+  test('100x', () {
+    env.run("x=10");
+    expect(env.run("100x"), 1000);
+  });
 }

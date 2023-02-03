@@ -84,7 +84,7 @@ const keychars = '+-×*/%^!()°=,';
 
 /// doesnot start with number and doesn't inlcude operator character.
 Token _identifier(String src, Ref<int> cur) {
-  assert(!_isDigit(src[0]));
+  assert(!_isDigit(src[cur.value]));
   final start = cur.value;
   var i = start;
   while (i < src.length) {
@@ -109,19 +109,20 @@ Token _number(String src, Ref<int> cur) {
   bool dot = false;
   final start = cur.value;
   int i;
-  for (i = start; i < src.length - 1;) {
-    final next = src[i + 1];
-    if (_isDigit(next)) {
+  for (i = start + 1; i < src.length;) {
+    final ch = src[i];
+    if (_isDigit(ch)) {
       i++;
       continue;
-    } else if (next == '.' && !dot) {
+    } else if (ch == '.' && !dot) {
       dot = true;
       i++;
       continue;
+    } else {
+      break;
     }
-    break;
   }
-  final end = i + 1;
+  final end = i;
   cur.value = end;
   return Token(type: TokenType.number, text: src.substring(start, end));
 }

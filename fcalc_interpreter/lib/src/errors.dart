@@ -32,3 +32,10 @@ class FunctionUnddefinedError implements Exception {
     return "function $name is undefined";
   }
 }
+
+class SyntaxError implements Exception {
+  @override
+  String toString() {
+    return "syntax error";
+  }
+}

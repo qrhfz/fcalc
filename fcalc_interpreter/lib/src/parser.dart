@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:fcalc_interpreter/src/errors.dart';
 import 'package:fcalc_interpreter/src/expr.dart';
 import 'package:fcalc_interpreter/src/token.dart';
 
@@ -34,9 +35,6 @@ class Parser {
     _consume();
     if (name != null) {
       final right = _expression();
-      if (right == null) {
-        return null;
-      }
 
       return Expr.varDef(name, right);
     }
@@ -99,14 +97,21 @@ class Parser {
       return null;
     }
     final body = _expression();
-    if (body == null) {
-      return null;
-    }
     return Expr.funcDef(name, args, body);
   }
 
-  Expr? _expression() {
-    return _term();
+  Expr _expression() {
+    var expr = _term();
+    if (expr == null) {
+      throw SyntaxError();
+    }
+    Expr? next;
+    next = _term();
+    while (next != null) {
+      expr = Expr.binary(expr!, Token.times, next);
+      next = _term();
+    }
+    return expr!;
   }
 
   Expr? _term() {
@@ -122,7 +127,7 @@ class Parser {
 
     var right = _product();
     if (right == null) {
-      return null;
+      throw SyntaxError();
     }
 
     while (true) {
@@ -133,7 +138,7 @@ class Parser {
       _consume(); //consume the operator
       final nextRight = _product();
       if (nextRight == null) {
-        break;
+        throw SyntaxError();
       }
 
       right = Expr.binary(right!, nextOp!, nextRight);
@@ -155,7 +160,7 @@ class Parser {
 
     var right = _exponent();
     if (right == null) {
-      return null;
+      throw SyntaxError();
     }
 
     while (true) {
@@ -166,7 +171,7 @@ class Parser {
       _consume(); //consume the operator
       final nextRight = _exponent();
       if (nextRight == null) {
-        break;
+        throw SyntaxError();
       }
 
       right = Expr.binary(right!, nextOp!, nextRight);
@@ -188,7 +193,7 @@ class Parser {
 
     var right = _postfixUnary();
     if (right == null) {
-      return null;
+      throw SyntaxError();
     }
 
     while (true) {
@@ -199,7 +204,7 @@ class Parser {
       _consume(); //consume the operator
       final nextRight = _postfixUnary();
       if (nextRight == null) {
-        break;
+        throw SyntaxError();
       }
 
       right = Expr.binary(right!, nextOp!, nextRight);
@@ -245,18 +250,14 @@ class Parser {
       final params = <Expr>[];
 
       final expr = _expression();
-      if (expr != null) {
-        params.add(expr);
-      }
+
+      params.add(expr);
 
       while (_peek()?.type == TokenType.comma) {
         _consume(); // consume comma
         final expr = _expression();
-        if (expr != null) {
-          params.add(expr);
-        } else {
-          break;
-        }
+
+        params.add(expr);
       }
       _consume(); // consume the right parentheses
 
@@ -274,9 +275,6 @@ class Parser {
     final lparen = _consumeAny([TokenType.lparen]);
     if (lparen != null) {
       final expr = _expression();
-      if (expr == null) {
-        return null;
-      }
       _consumeAny([TokenType.rparen]);
 
       return Expr.group(expr);

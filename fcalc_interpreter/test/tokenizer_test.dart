@@ -85,4 +85,14 @@ void main() {
     final actual = tokenize(src);
     expect(actual, expected);
   });
+
+  test('100x', () {
+    final src = '100x';
+    final expected = BuiltList.of([
+      Token(type: TokenType.number, text: "100"),
+      Token(type: TokenType.identifier, text: "x"),
+    ]);
+    final actual = tokenize(src);
+    expect(actual, expected);
+  });
 }
