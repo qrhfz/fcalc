@@ -68,8 +68,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           TabBar(
             controller: tabCtl,
             tabs: const [
-              Tab(icon: Icon(Icons.calculate)),
               Tab(icon: Icon(Icons.keyboard)),
+              Tab(icon: Icon(Icons.calculate)),
               Tab(icon: Icon(Icons.functions)),
             ],
           ),
@@ -78,8 +78,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             child: TabBarView(
               controller: tabCtl,
               children: const [
-                Keypad(),
                 SizedBox(),
+                Keypad(),
                 Text('functions'),
               ],
             ),
