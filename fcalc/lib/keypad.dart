@@ -2,6 +2,7 @@ import 'package:fcalc/calculate.dart';
 import 'package:fcalc/input_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibration/vibration.dart';
 
 class Keypad extends ConsumerStatefulWidget {
   const Keypad({
@@ -148,7 +149,12 @@ class KeypadButton extends StatelessWidget {
           ),
           foregroundColor: const MaterialStatePropertyAll(Colors.white),
         ),
-        onPressed: onPressed,
+        onPressed: () async {
+          if (await Vibration.hasVibrator() == true) {
+            Vibration.vibrate(duration: 65);
+          }
+          onPressed();
+        },
         child: Text(text),
       ),
     );
