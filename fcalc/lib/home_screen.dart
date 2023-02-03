@@ -16,7 +16,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final focus = FocusNode();
-  bool showKeypad = true;
+
   @override
   Widget build(BuildContext context) {
     final inputCtl = ref.watch(inputCtlProv);
@@ -47,23 +47,53 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
           ),
-          if (showKeypad)
-            const Flexible(
-              flex: 8,
-              child: Keypad(),
-            )
-          else
-            ListView.builder(
-              itemCount: builtinFuncsList.length,
-              itemBuilder: (c, i) {
-                return ListTile(
-                  title: Text(builtinFuncsList[i].signature),
-                  subtitle: Text(builtinFuncsList[i].docs),
-                );
-              },
-            ),
+          Flexible(
+            flex: 8,
+            child: ref.watch(showKeypadProv)
+                ? const Keypad()
+                : const FuncListView(),
+          )
         ],
       ),
     );
   }
 }
+
+class FuncListView extends ConsumerWidget {
+  const FuncListView({super.key});
+
+  @override
+  Widget build(context, ref) {
+    final inputCtl = ref.watch(inputCtlProv);
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: builtinFuncsList.length,
+            itemBuilder: (c, i) {
+              return ListTile(
+                title: Text(builtinFuncsList[i].signature),
+                subtitle: Text(builtinFuncsList[i].docs),
+                onTap: () {
+                  inputCtl.text += builtinFuncsList[i].signature;
+                },
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: IconButton(
+            onPressed: () {
+              ref.read(showKeypadProv.notifier).state = true;
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+final showKeypadProv = StateProvider((ref) => true);

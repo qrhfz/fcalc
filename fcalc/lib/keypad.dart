@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fcalc/calculate.dart';
+import 'package:fcalc/home_screen.dart';
 import 'package:fcalc/input_controller.dart';
 import 'package:fcalc/vibrate.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,12 @@ class _KeypadState extends ConsumerState<Keypad> {
       children: [
         ExpandedRow(
           children: [
-            KeypadButton(text: "𝑓", onPressed: func),
+            KeypadButton(
+              text: "𝑓",
+              onPressed: () {
+                ref.read(showKeypadProv.notifier).state = false;
+              },
+            ),
             KeypadButton(text: "e", onPressed: insertText("e")),
             KeypadButton(text: "π", onPressed: insertText("π")),
             KeypadButton(text: "°", onPressed: insertText("°")),
@@ -191,19 +197,23 @@ class KeypadButton extends ConsumerWidget {
           child: icon == null
               ? TextButton(
                   style: buttonStyle,
+                  child: Text(text),
                   onPressed: () async {
                     await ref.read(vibratorProv).vibrate();
+                    onPressed();
                   },
-                  child: Text(text),
                 )
               : TextButton.icon(
-                  onPressed: onPressed,
                   icon: IconTheme(
                       data: Theme.of(context)
                           .iconTheme
                           .copyWith(color: Colors.white),
                       child: icon!),
                   label: Text(text),
+                  onPressed: () async {
+                    await ref.read(vibratorProv).vibrate();
+                    onPressed();
+                  },
                 ),
         ),
       );

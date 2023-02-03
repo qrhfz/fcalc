@@ -32,7 +32,7 @@ const builtinFuncsList = [
   ),
   FuncSig(
     signature: "√(x)",
-    docs: "base 10 logarithm",
+    docs: "square root",
   ),
   FuncSig(
     signature: "ln(x)",
