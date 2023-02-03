@@ -51,8 +51,8 @@ class _KeypadState extends ConsumerState<Keypad> {
           children: [
             KeypadButton(text: "2", onPressed: two),
             KeypadButton(text: "3", onPressed: three),
-            KeypadButton(text: "-", onPressed: minus),
             KeypadButton(text: "1", onPressed: one),
+            KeypadButton(text: "-", onPressed: minus),
           ],
         ),
         ExpandedRow(
