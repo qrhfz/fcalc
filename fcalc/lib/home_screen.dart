@@ -16,23 +16,13 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen>
-    with TickerProviderStateMixin {
-  late final TabController tabCtl;
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final focus = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    tabCtl = TabController(length: 3, vsync: this, initialIndex: 1);
-
-    tabCtl.addListener(() {
-      if (tabCtl.index == 0) {
-        focus.requestFocus();
-      } else {
-        focus.unfocus();
-      }
-    });
+    // Future.microtask(() => focus.requestFocus());
   }
 
   @override
@@ -65,24 +55,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ],
             ),
           ),
-          TabBar(
-            controller: tabCtl,
-            tabs: const [
-              Tab(icon: Icon(Icons.keyboard)),
-              Tab(icon: Icon(Icons.calculate)),
-              Tab(icon: Icon(Icons.functions)),
-            ],
-          ),
-          Flexible(
+          const Flexible(
             flex: 8,
-            child: TabBarView(
-              controller: tabCtl,
-              children: const [
-                SizedBox(),
-                Keypad(),
-                Text('functions'),
-              ],
-            ),
+            child: Keypad(),
           ),
         ],
       ),
