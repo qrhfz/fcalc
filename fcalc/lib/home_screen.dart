@@ -22,7 +22,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Future.microtask(() => focus.requestFocus());
   }
 
   @override
@@ -39,9 +38,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               children: [
                 const Expanded(child: ResultView()),
                 TextField(
-                  focusNode: focus,
+                  keyboardType: TextInputType.none,
+                  autofocus: true,
                   controller: inputCtl,
-                  textAlign: TextAlign.end,
+                  showCursor: true,
                   style: const TextStyle(fontSize: 24),
                   onSubmitted: (_) {
                     final src = inputCtl.text;

@@ -32,9 +32,9 @@ class _KeypadState extends ConsumerState<Keypad> {
         ExpandedRow(
           children: [
             KeypadButton(text: "𝑓", onPressed: func),
-            KeypadButton(text: "e", onPressed: e),
-            KeypadButton(text: "π", onPressed: pi),
-            KeypadButton(text: "°", onPressed: degree),
+            KeypadButton(text: "e", onPressed: insertText("e")),
+            KeypadButton(text: "π", onPressed: insertText("π")),
+            KeypadButton(text: "°", onPressed: insertText("°")),
             KeypadButton(
               icon: const Icon(Icons.backspace),
               text: "",
@@ -43,43 +43,43 @@ class _KeypadState extends ConsumerState<Keypad> {
           ],
         ),
         ExpandedRow(children: [
-          KeypadButton(text: "7", onPressed: seven),
-          KeypadButton(text: "8", onPressed: eight),
-          KeypadButton(text: "9", onPressed: nine),
-          KeypadButton(text: "/", onPressed: divide),
-          KeypadButton(text: "^", onPressed: power),
+          KeypadButton(text: "7", onPressed: insertText("7")),
+          KeypadButton(text: "8", onPressed: insertText("8")),
+          KeypadButton(text: "9", onPressed: insertText("9")),
+          KeypadButton(text: "/", onPressed: insertText("/")),
+          KeypadButton(text: "^", onPressed: insertText("^")),
         ]),
         ExpandedRow(
           children: [
-            KeypadButton(text: "4", onPressed: four),
-            KeypadButton(text: "5", onPressed: five),
-            KeypadButton(text: "6", onPressed: six),
-            KeypadButton(text: "×", onPressed: times),
-            KeypadButton(text: "!", onPressed: factorial),
+            KeypadButton(text: "4", onPressed: insertText("4")),
+            KeypadButton(text: "5", onPressed: insertText("5")),
+            KeypadButton(text: "6", onPressed: insertText("6")),
+            KeypadButton(text: "×", onPressed: insertText("×")),
+            KeypadButton(text: "!", onPressed: insertText("!")),
           ],
         ),
         ExpandedRow(
           children: [
-            KeypadButton(text: "2", onPressed: two),
-            KeypadButton(text: "3", onPressed: three),
-            KeypadButton(text: "1", onPressed: one),
-            KeypadButton(text: "-", onPressed: minus),
-            KeypadButton(text: "%", onPressed: percent),
+            KeypadButton(text: "1", onPressed: insertText("1")),
+            KeypadButton(text: "2", onPressed: insertText("2")),
+            KeypadButton(text: "3", onPressed: insertText("3")),
+            KeypadButton(text: "-", onPressed: insertText("-")),
+            KeypadButton(text: "%", onPressed: insertText("%")),
           ],
         ),
         ExpandedRow(
           children: [
-            KeypadButton(text: "0", onPressed: zero),
-            KeypadButton(text: "(", onPressed: lParen),
-            KeypadButton(text: ")", onPressed: rParen),
-            KeypadButton(text: "+", onPressed: plus),
-            KeypadButton(text: "=", onPressed: equal),
+            KeypadButton(text: "0", onPressed: insertText("0")),
+            KeypadButton(text: "(", onPressed: insertText("(")),
+            KeypadButton(text: ")", onPressed: insertText(")")),
+            KeypadButton(text: "+", onPressed: insertText("+")),
+            KeypadButton(text: "=", onPressed: insertText("=")),
           ],
         ),
         ExpandedRow(
           children: [
-            KeypadButton(text: ".", onPressed: dot),
-            KeypadButton(text: ",", onPressed: comma),
+            KeypadButton(text: ".", onPressed: insertText(".")),
+            KeypadButton(text: ",", onPressed: insertText(",")),
             KeypadButton(
               text: "",
               icon: const Icon(Icons.arrow_left),
@@ -117,56 +117,38 @@ class _KeypadState extends ConsumerState<Keypad> {
     );
   }
 
-  void lParen() => inputCtl.text += "(";
-
-  void rParen() => inputCtl.text += ")";
-
-  void percent() => inputCtl.text += "%";
+  Function() insertText(String text) => () {
+        final pos = inputCtl.selection.baseOffset;
+        if (pos == -1) {
+          inputCtl.text += text;
+        } else {
+          inputCtl.text = inputCtl.text.substring(0, pos) +
+              text +
+              inputCtl.text.substring(pos, inputCtl.text.length);
+        }
+        moveCursor(pos + text.length);
+      };
 
   void del() {
     if (inputCtl.text.isEmpty) {
       return;
     }
-    inputCtl.text = inputCtl.text.substring(0, inputCtl.text.length - 1);
+    final pos = inputCtl.selection.baseOffset;
+    if (pos == -1 || pos == inputCtl.text.length) {
+      inputCtl.text = inputCtl.text.substring(0, inputCtl.text.length - 1);
+      moveCursor(inputCtl.text.length);
+      return;
+    }
+    inputCtl.text = inputCtl.text.substring(0, pos - 1) +
+        inputCtl.text.substring(pos, inputCtl.text.length);
+
+    moveCursor(pos - 1);
   }
 
-  void seven() => inputCtl.text += "7";
-
-  void eight() => inputCtl.text += "8";
-
-  void nine() => inputCtl.text += "9";
-
-  void divide() => inputCtl.text += "/";
-
-  void four() => inputCtl.text += "4";
-
-  void five() => inputCtl.text += "5";
-
-  void six() => inputCtl.text += "6";
-
-  void times() => inputCtl.text += '×';
-
-  void one() => inputCtl.text += '1';
-
-  void two() => inputCtl.text += '2';
-
-  void three() => inputCtl.text += '3';
-
-  void minus() => inputCtl.text += '-';
-
-  void zero() => inputCtl.text += '0';
-
-  void dot() => inputCtl.text += '.';
-
-  void equal() => inputCtl.text += '=';
-
-  void plus() => inputCtl.text += '+';
-
-  void power() => inputCtl.text += '^';
-
-  void factorial() => inputCtl.text += '!';
-
-  void degree() => inputCtl.text += '°';
+  void moveCursor(int pos) {
+    inputCtl.selection =
+        inputCtl.selection.copyWith(baseOffset: pos, extentOffset: pos);
+  }
 
   void enter() {
     final src = inputCtl.text;
@@ -174,19 +156,7 @@ class _KeypadState extends ConsumerState<Keypad> {
     inputCtl.clear();
   }
 
-  void pi() => inputCtl.text += 'π';
-
-  void comma() => inputCtl.text += ',';
-
   void func() {}
-
-  void e() {
-    inputCtl.text += 'e';
-  }
-
-  void space() {
-    inputCtl.text += ' ';
-  }
 }
 
 class KeypadButton extends StatelessWidget {
