@@ -1,7 +1,5 @@
 import 'package:fcalc/calculate.dart';
-import 'package:fcalc/history.dart';
 import 'package:fcalc/input_controller.dart';
-import 'package:fcalc/interpreter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
