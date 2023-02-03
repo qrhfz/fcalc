@@ -24,34 +24,54 @@ class _KeypadState extends ConsumerState<Keypad> {
 
   @override
   Widget build(context) {
-    return GridView(
-      gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+    return Column(
       children: [
-        KeypadButton(text: "(", onPressed: lParen),
-        KeypadButton(text: ")", onPressed: rParen),
-        KeypadButton(text: "%", onPressed: percent),
-        KeypadButton(text: "⇦", onPressed: del),
-        KeypadButton(text: "7", onPressed: seven),
-        KeypadButton(text: "8", onPressed: eight),
-        KeypadButton(text: "9", onPressed: nine),
-        KeypadButton(text: "/", onPressed: divide),
-        KeypadButton(text: "4", onPressed: four),
-        KeypadButton(text: "5", onPressed: five),
-        KeypadButton(text: "6", onPressed: six),
-        KeypadButton(text: "×", onPressed: times),
-        KeypadButton(text: "1", onPressed: one),
-        KeypadButton(text: "2", onPressed: two),
-        KeypadButton(text: "3", onPressed: three),
-        KeypadButton(text: "-", onPressed: minus),
-        KeypadButton(text: "^", onPressed: power),
-        KeypadButton(text: "0", onPressed: zero),
-        KeypadButton(text: "!", onPressed: factorial),
-        KeypadButton(text: "+", onPressed: plus),
-        KeypadButton(text: "°", onPressed: degree),
-        KeypadButton(text: ".", onPressed: dot),
-        KeypadButton(text: "=", onPressed: equal),
-        KeypadButton(text: "↵", onPressed: enter),
+        ExpandedRow(
+          children: [
+            KeypadButton(text: "(", onPressed: lParen),
+            KeypadButton(text: ")", onPressed: rParen),
+            KeypadButton(text: "%", onPressed: percent),
+            KeypadButton(text: "⇦", onPressed: del),
+          ],
+        ),
+        ExpandedRow(children: [
+          KeypadButton(text: "7", onPressed: seven),
+          KeypadButton(text: "8", onPressed: eight),
+          KeypadButton(text: "9", onPressed: nine),
+          KeypadButton(text: "/", onPressed: divide),
+        ]),
+        ExpandedRow(
+          children: [
+            KeypadButton(text: "4", onPressed: four),
+            KeypadButton(text: "5", onPressed: five),
+            KeypadButton(text: "6", onPressed: six),
+            KeypadButton(text: "×", onPressed: times),
+          ],
+        ),
+        ExpandedRow(
+          children: [
+            KeypadButton(text: "2", onPressed: two),
+            KeypadButton(text: "3", onPressed: three),
+            KeypadButton(text: "-", onPressed: minus),
+            KeypadButton(text: "1", onPressed: one),
+          ],
+        ),
+        ExpandedRow(
+          children: [
+            KeypadButton(text: "^", onPressed: power),
+            KeypadButton(text: "0", onPressed: zero),
+            KeypadButton(text: "!", onPressed: factorial),
+            KeypadButton(text: "+", onPressed: plus),
+          ],
+        ),
+        ExpandedRow(
+          children: [
+            KeypadButton(text: "°", onPressed: degree),
+            KeypadButton(text: ".", onPressed: dot),
+            KeypadButton(text: "=", onPressed: equal),
+            KeypadButton(text: "↵", onPressed: enter),
+          ],
+        ),
       ],
     );
   }
@@ -129,15 +149,33 @@ class KeypadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      style: ButtonStyle(
-        textStyle: MaterialStateProperty.all(
-          const TextStyle(fontSize: 24),
+    return Expanded(
+      child: TextButton(
+        style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(
+            const TextStyle(fontSize: 24),
+          ),
+          foregroundColor: const MaterialStatePropertyAll(Colors.white),
         ),
-        foregroundColor: const MaterialStatePropertyAll(Colors.white),
+        onPressed: onPressed,
+        child: Text(text),
       ),
-      onPressed: onPressed,
-      child: Text(text),
+    );
+  }
+}
+
+class ExpandedRow extends StatelessWidget {
+  const ExpandedRow({required this.children, super.key});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
     );
   }
 }

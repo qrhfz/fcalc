@@ -41,7 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       body: Column(
         children: [
           Flexible(
-            flex: 1,
+            flex: 5,
             child: Column(
               children: [
                 const Expanded(child: ResultView()),
@@ -62,7 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ],
           ),
           Flexible(
-            flex: 3,
+            flex: 8,
             child: TabBarView(
               controller: tabCtl,
               children: const [
