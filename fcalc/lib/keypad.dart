@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fcalc/calculate.dart';
 import 'package:fcalc/input_controller.dart';
+import 'package:fcalc/vibrate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
@@ -159,7 +160,7 @@ class _KeypadState extends ConsumerState<Keypad> {
   void func() {}
 }
 
-class KeypadButton extends StatelessWidget {
+class KeypadButton extends ConsumerWidget {
   const KeypadButton({
     required this.text,
     required this.onPressed,
@@ -175,7 +176,7 @@ class KeypadButton extends StatelessWidget {
   final Color? backgroundColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final buttonStyle = ButtonStyle(
       textStyle: MaterialStateProperty.all(
         const TextStyle(fontSize: 24),
@@ -190,7 +191,9 @@ class KeypadButton extends StatelessWidget {
           child: icon == null
               ? TextButton(
                   style: buttonStyle,
-                  onPressed: _press,
+                  onPressed: () async {
+                    await ref.read(vibratorProv).vibrate();
+                  },
                   child: Text(text),
                 )
               : TextButton.icon(
@@ -205,13 +208,6 @@ class KeypadButton extends StatelessWidget {
         ),
       );
     });
-  }
-
-  void _press() async {
-    if (await Vibration.hasVibrator() == true) {
-      Vibration.vibrate(duration: 65);
-    }
-    onPressed();
   }
 }
 
