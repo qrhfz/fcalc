@@ -24,10 +24,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    tabCtl = TabController(length: 3, vsync: this);
+    tabCtl = TabController(length: 3, vsync: this, initialIndex: 1);
 
     tabCtl.addListener(() {
-      if (tabCtl.index == 1) {
+      if (tabCtl.index == 0) {
         focus.requestFocus();
       } else {
         focus.unfocus();
