@@ -14,43 +14,65 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with TickerProviderStateMixin {
+  late final TabController tabCtl;
+  final focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    tabCtl = TabController(length: 3, vsync: this);
+
+    tabCtl.addListener(() {
+      if (tabCtl.index == 1) {
+        focus.requestFocus();
+      } else {
+        focus.unfocus();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final inputCtl = ref.watch(inputCtlProv);
 
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        body: Column(
-          children: [
-            Flexible(
-              flex: 1,
-              child: Column(
-                children: [
-                  const Expanded(child: ResultView()),
-                  TextField(
-                    controller: inputCtl,
-                    textAlign: TextAlign.end,
-                  ),
-                ],
-              ),
+    return Scaffold(
+      body: Column(
+        children: [
+          Flexible(
+            flex: 1,
+            child: Column(
+              children: [
+                const Expanded(child: ResultView()),
+                TextField(
+                  focusNode: focus,
+                  controller: inputCtl,
+                  textAlign: TextAlign.end,
+                ),
+              ],
             ),
-            const TabBar(tabs: [
+          ),
+          TabBar(
+            controller: tabCtl,
+            tabs: const [
               Tab(icon: Icon(Icons.calculate)),
               Tab(icon: Icon(Icons.keyboard)),
               Tab(icon: Icon(Icons.functions)),
-            ]),
-            const Flexible(
-              flex: 3,
-              child: TabBarView(children: [
+            ],
+          ),
+          Flexible(
+            flex: 3,
+            child: TabBarView(
+              controller: tabCtl,
+              children: const [
                 Keypad(),
-                Text('a'),
-                Text('b'),
-              ]),
+                SizedBox(),
+                Text('functions'),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
