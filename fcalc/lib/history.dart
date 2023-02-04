@@ -4,7 +4,14 @@ class History extends StateNotifier<List<HistoryEntry>> {
   History() : super([]);
 
   void add({required String input, num? result, String? error}) {
-    state = [...state, HistoryEntry(input: input, result: result)];
+    state = [
+      ...state,
+      HistoryEntry(
+        input: input,
+        result: result,
+        error: error,
+      ),
+    ];
   }
 }
 
@@ -16,5 +23,9 @@ class HistoryEntry {
   final num? result;
   final String? error;
 
-  HistoryEntry({required this.input, this.result, this.error});
+  HistoryEntry({required this.input, this.result, this.error}) {
+    if (result == null) {
+      assert(error != null);
+    }
+  }
 }

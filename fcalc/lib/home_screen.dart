@@ -20,40 +20,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final inputCtl = ref.watch(inputCtlProv);
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Flexible(
-            flex: 5,
-            child: Column(
-              children: [
-                const Expanded(child: ResultView()),
-                TextField(
-                  keyboardType: TextInputType.none,
-                  autofocus: true,
-                  controller: inputCtl,
-                  showCursor: true,
-                  style: const TextStyle(fontSize: 24),
-                  onSubmitted: (_) {
-                    final src = inputCtl.text;
-                    ref.read(calculateProv)(src);
-                    inputCtl.clear();
-                  },
-                  onEditingComplete: () {
-                    focus.requestFocus();
-                  },
-                ),
-              ],
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            Flexible(
+              flex: 5,
+              child: Column(
+                children: [
+                  const Expanded(child: ResultView()),
+                  TextField(
+                    keyboardType: TextInputType.none,
+                    autofocus: true,
+                    controller: inputCtl,
+                    showCursor: true,
+                    style: const TextStyle(fontSize: 24),
+                    onSubmitted: (_) {
+                      final src = inputCtl.text;
+                      ref.read(calculateProv)(src);
+                      inputCtl.clear();
+                    },
+                    onEditingComplete: () {
+                      focus.requestFocus();
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          Flexible(
-            flex: 8,
-            child: ref.watch(showKeypadProv)
-                ? const Keypad()
-                : const FuncListView(),
-          )
-        ],
+            Flexible(
+              flex: 8,
+              child: ref.watch(showKeypadProv)
+                  ? const Keypad()
+                  : const FuncListView(),
+            )
+          ],
+        ),
       ),
     );
   }

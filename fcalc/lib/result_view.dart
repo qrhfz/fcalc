@@ -47,10 +47,19 @@ class _ResultViewState extends ConsumerState<ResultView> {
                   entry.input,
                   style: const TextStyle(fontSize: 24),
                 ),
-                Text(
-                  entry.result?.toString() ?? "",
-                  style: const TextStyle(fontSize: 36),
-                ),
+                if (entry.result != null)
+                  Text(
+                    entry.result!.toString(),
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                if (entry.error != null)
+                  Text(
+                    entry.error!.toString(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: "monospace",
+                    ),
+                  ),
               ],
             ),
           ),
