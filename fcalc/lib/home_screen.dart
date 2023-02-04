@@ -59,38 +59,64 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-class FuncListView extends ConsumerWidget {
+class FuncListView extends ConsumerStatefulWidget {
   const FuncListView({super.key});
 
   @override
-  Widget build(context, ref) {
+  ConsumerState<FuncListView> createState() => _FuncListViewState();
+}
+
+class _FuncListViewState extends ConsumerState<FuncListView> {
+  String filterText = "";
+  List<FuncSig> get filtered => builtinFuncsList
+      .where((item) => item.signature.contains(filterText))
+      .toList();
+
+  @override
+  Widget build(context) {
     final inputCtl = ref.watch(inputCtlProv);
 
     return Column(
       children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    ref.read(showKeypadProv.notifier).state = true;
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: "Search",
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) => setState(() => filterText = v),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         Expanded(
           child: ListView.builder(
-            itemCount: builtinFuncsList.length,
+            itemCount: filtered.length,
             itemBuilder: (c, i) {
               return ListTile(
-                title: Text(builtinFuncsList[i].signature),
-                subtitle: Text(builtinFuncsList[i].docs),
+                title: Text(filtered[i].signature),
+                subtitle: Text(filtered[i].docs),
                 onTap: () {
-                  inputCtl.text += builtinFuncsList[i].signature;
+                  inputCtl.text += filtered[i].signature;
                 },
               );
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: IconButton(
-            onPressed: () {
-              ref.read(showKeypadProv.notifier).state = true;
-            },
-            icon: const Icon(Icons.arrow_back),
-          ),
-        )
       ],
     );
   }
