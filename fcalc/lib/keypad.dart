@@ -6,7 +6,6 @@ import 'package:fcalc/input_controller.dart';
 import 'package:fcalc/vibrate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vibration/vibration.dart';
 
 class Keypad extends ConsumerStatefulWidget {
   const Keypad({

@@ -1,6 +1,7 @@
 import 'package:fcalc/builtin_funcs_list.dart';
 import 'package:fcalc/input_controller.dart';
 import 'package:fcalc/keypad.dart';
+import 'package:fcalc/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,6 +21,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final inputCtl = ref.watch(inputCtlProv);
+    final _ = ref.watch(calculateProv);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -27,23 +29,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             Flexible(
               flex: 5,
-              child: Column(
+              child: Stack(
                 children: [
-                  const Expanded(child: ResultView()),
-                  TextField(
-                    keyboardType: TextInputType.none,
-                    autofocus: true,
-                    controller: inputCtl,
-                    showCursor: true,
-                    style: const TextStyle(fontSize: 24),
-                    onSubmitted: (_) {
-                      final src = inputCtl.text;
-                      ref.read(calculateProv)(src);
-                      inputCtl.clear();
-                    },
-                    onEditingComplete: () {
-                      focus.requestFocus();
-                    },
+                  Column(
+                    children: [
+                      const Expanded(child: ResultView()),
+                      TextField(
+                        keyboardType: TextInputType.none,
+                        autofocus: true,
+                        controller: inputCtl,
+                        showCursor: true,
+                        style: const TextStyle(fontSize: 24),
+                        onSubmitted: (_) {
+                          final src = inputCtl.text;
+                          ref.read(calculateProv)(src);
+                          inputCtl.clear();
+                        },
+                        onEditingComplete: () {
+                          focus.requestFocus();
+                        },
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const SettingsScreen(),
+                        ));
+                      },
+                      icon: const Icon(Icons.settings),
+                    ),
                   ),
                 ],
               ),
